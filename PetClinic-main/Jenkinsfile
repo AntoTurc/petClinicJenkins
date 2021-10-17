@@ -1,0 +1,29 @@
+pipeline{
+    agent any
+    options{
+        buildDiscarder(logRotator(numToKeepStr:'5'))
+    }
+    stages{
+//         stage('SonarQube Analysis'){
+//             steps{
+//                 withSonarQubeEnv(installationName:'sonar'){
+//                     sh './mvnw clean org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.0.2155:sonars'
+//
+//                 }
+//             }
+//         }
+//         stage("Quality gate") {
+//             steps {
+//                 // waitForQualityGate abortPipeline: true
+//                 waitForQualityGate(webhookSecretId: 'jenkins', abortPipeline: true)
+//             }
+//         }
+        stage("Scan") {
+            steps {
+                withSonarQubeEnv(installationName: 'SonarQube') {
+                    sh './mvnw clean verify sonar:sonar'
+                }
+            }
+        }
+    }
+}
